@@ -1,4 +1,4 @@
-.text
+.text HELLO JUST TESTING MY COMMITTING
     addiu $t0, $zero, 0x539
     add $t0, $t1, $t2
         addiu $t1, $zero, 10000000000   # Any ASCII string in immediate field
