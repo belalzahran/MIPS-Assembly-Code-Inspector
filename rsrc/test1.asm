@@ -1,4 +1,4 @@
-.text another
+.text
 # This program attempts to have 1 example for each "type"
 functionF:
     add $t0, $t1, $t2
