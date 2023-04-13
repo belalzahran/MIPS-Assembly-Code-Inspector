@@ -373,14 +373,14 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
         {
             for (int i = 0; i < 8; i ++)
             {
-                fprintf(stdout,"%s: %s\n",(char *) sRegister[i][0],generate_asterisk_string((int)(intptr_t)sRegister[i][1]));
+                fprintf(stdout,"%s: %s\n",(char *) sRegister[i][0],generate_asterisk_string(sRegister[i][1]));
             }
         }
         else
         {
             for (int i = 0; i < 10; i ++)
             {
-                fprintf(stdout,"%s: %s\n",(char *) tRegister[i][0],generate_asterisk_string((int)(intptr_t)tRegister[i][1]));
+                fprintf(stdout,"%s: %s\n",(char *) tRegister[i][0],generate_asterisk_string(tRegister[i][1]));
             }
         }
     
