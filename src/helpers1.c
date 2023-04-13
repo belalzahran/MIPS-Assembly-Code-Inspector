@@ -16,16 +16,21 @@ int optionL(const char *filename) {
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
     int label_count = 0;
-    bool in_text_section = false;
+    bool in_text_section = true;
 
     while (fgets(buffer, BUFFER_SIZE, file) != NULL) {
-        if (strncmp(buffer, ".text", 5) == 0) {
+        
+        if (strstr(buffer,".text") != NULL)
+        {
             in_text_section = true;
-        } else if (strncmp(buffer, ".data", 5) == 0) {
+        } 
+        else if (strstr(buffer,".data") != NULL) 
+        {
             in_text_section = false;
         }
 
-        if (in_text_section) {
+        if (in_text_section) 
+        {
             int line_length = strlen(buffer);
             for (int i = 0; i < line_length; i++) {
                 if (buffer[i] == ':') {

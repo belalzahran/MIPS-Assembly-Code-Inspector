@@ -34,7 +34,6 @@ int main(int argc, char* argv[])
 	{
 		lineCount = optionE(inFile);
 		printf("Line Count: %d\n",lineCount);
-
 	}
 	else if (option == 'l')
 	{
@@ -48,9 +47,9 @@ int main(int argc, char* argv[])
 	}
 	else if (option == 't')
 	{
-		printf("Running option T\n");
+		//printf("Running option T\n");
 		optionT(inFile,&rCount,&iCount,&jCount);
-		printf("%d r instructions\n%d i instructions\n%d j instructions\n",rCount,iCount,jCount);
+		printf("R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
 		
 	}
 
