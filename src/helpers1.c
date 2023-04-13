@@ -192,10 +192,60 @@ void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
 }
 
 
+bool string_exists(char *key, char **searchFrom, int count) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(key, searchFrom[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+char* combine_strings(const char* str1, const char* str2) {
+    size_t length1 = strlen(str1);
+    size_t length2 = strlen(str2);
+
+    char* combined = (char*) malloc(length1 + length2 + 2); 
+
+    if (combined != NULL) {
+        strcpy(combined, str1);
+        strcat(combined, " ");
+        strcat(combined, str2);
+    }
+
+    return combined;
+}
+
+bool checkOptionCombination(char *argv[], int argc)
+{
+
+    char *validCommands2[] = {"-e","-c","-l","-t"};
+    char *validCommands3[] = {"-r s","-r t","-e -V","-c -V","-l -V"};
+    char *newCommand;
+    if (argc == 3)
+    {
+        newCommand = combine_strings(argv[1],argv[2]);
+
+        if ( string_exists(newCommand, validCommands3, 5) )
+        {
+            free(newCommand);
+            return true;
+        }
+
+    }
+    else if (argc == 2)
+    {
+        if (string_exists(argv[1], validCommands2, 4))
+            return true;
+    }
+
+    return false;
+}
 
 
 
-void process_file(FILE *inFile, char option)
+
+void process_file(FILE *inFile, char option, char secondArg)
 {
 
     int labelCount = 0;
@@ -217,23 +267,69 @@ void process_file(FILE *inFile, char option)
     if(option == 'e')
 	{
 		lineCount = optionE(inFile);
-		printf("Total number of lines: %d\n",lineCount);
+		fprintf(stdout,"Total number of lines: %d\n",lineCount);
 	}
 	else if (option == 'l')
 	{
 		labelCount = optionL(inFile);
-		printf("Lables: %d\n",labelCount);
+		fprintf(stdout,"Lables: %d\n",labelCount);
 	}
 	else if (option == 'c')
 	{
 		commentCount = optionC(inFile);
-		printf("Comments: %d\n",commentCount);
+		fprintf(stdout,"Comments: %d\n",commentCount);
 	}
 	else if (option == 't')
 	{
 		//printf("Running option T\n");
 		optionT(inFile,&rCount,&iCount,&jCount);
-		printf("R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
+		fprintf(stdout,"R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
+		
+	}
+}
+
+
+
+
+void process_fileVerbose(FILE *inFile, char option)
+{
+
+    int labelCount = 0;
+	int lineCount = 0;
+	int commentCount = 0;
+	int rCount = 0;
+	int iCount = 0;
+	int jCount = 0;
+
+    // char buffer[1024];
+
+    // printf("Processing with mode: %d\n", mode);
+
+    // while (fgets(buffer, sizeof(buffer), file) != NULL) {
+    //     printf("Processing line: %s", buffer);
+    //     // Do the actual processing here
+    // }   
+
+    if(option == 'e')
+	{
+		lineCount = optionE(inFile);
+		fprintf(stdout,"Total number of lines: %d\n",lineCount);
+	}
+	else if (option == 'l')
+	{
+		labelCount = optionL(inFile);
+		fprintf(stdout,"Lables: %d\n",labelCount);
+	}
+	else if (option == 'c')
+	{
+		commentCount = optionC(inFile);
+		fprintf(stdout,"Comments: %d\n",commentCount);
+	}
+	else if (option == 't')
+	{
+		//printf("Running option T\n");
+		optionT(inFile,&rCount,&iCount,&jCount);
+		fprintf(stdout,"R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
 		
 	}
 }

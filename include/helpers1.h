@@ -12,11 +12,12 @@ int dollarSignCount(char *currString, int stringLength);
 bool dollarAndComma (char *currString, int stringLength);
 bool checkJ(char *input);
 
-void process_file(FILE *file, char option);
+void process_file(FILE *file, char option, char secondArg);
+void process_fileVerbose(FILE *inFile, char option);
 
-
-
-
+bool checkOptionCombination(char *argv[], int argc);
+bool string_exists(char *key, char **searchFrom, int count);
+char* combine_strings(const char* str1, const char* str2);
 
 
 #endif
