@@ -6,12 +6,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-int optionL(const char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return -1;
-    }
+int optionL(FILE *file) {
 
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
@@ -45,12 +40,7 @@ int optionL(const char *filename) {
     return label_count;
 }
 
-int optionE( char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return -1;
-    }
+int optionE(FILE *file) {
 
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
@@ -74,12 +64,7 @@ int optionE( char *filename) {
     return line_count;
 }
 
-int optionC(char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return -1;
-    }
+int optionC(FILE *file) {
 
     int ch;
     int comment_count = 0;
@@ -162,13 +147,8 @@ bool checkJ(char *input) {
     return space_count == 1;
 }
 
-void optionT (char *filename, int *rCount, int *iCount, int *jCount)
+void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
 {
-    FILE *file = fopen(filename,"r");
-    if (file == NULL)
-    {
-        perror("Error opening file\n");
-    }
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
     int dollarCount;
@@ -211,3 +191,49 @@ void optionT (char *filename, int *rCount, int *iCount, int *jCount)
     fclose(file);
 }
 
+
+
+
+
+void process_file(FILE *inFile, char option)
+{
+
+    int labelCount = 0;
+	int lineCount = 0;
+	int commentCount = 0;
+	int rCount = 0;
+	int iCount = 0;
+	int jCount = 0;
+
+    // char buffer[1024];
+
+    // printf("Processing with mode: %d\n", mode);
+
+    // while (fgets(buffer, sizeof(buffer), file) != NULL) {
+    //     printf("Processing line: %s", buffer);
+    //     // Do the actual processing here
+    // }   
+
+    if(option == 'e')
+	{
+		lineCount = optionE(inFile);
+		printf("Total number of lines: %d\n",lineCount);
+	}
+	else if (option == 'l')
+	{
+		labelCount = optionL(inFile);
+		printf("Lables: %d\n",labelCount);
+	}
+	else if (option == 'c')
+	{
+		commentCount = optionC(inFile);
+		printf("Comments: %d\n",commentCount);
+	}
+	else if (option == 't')
+	{
+		//printf("Running option T\n");
+		optionT(inFile,&rCount,&iCount,&jCount);
+		printf("R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
+		
+	}
+}
