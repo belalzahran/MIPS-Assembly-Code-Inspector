@@ -242,9 +242,6 @@ bool checkOptionCombination(char *argv[], int argc)
     return false;
 }
 
-
-
-
 void process_file(FILE *inFile, char option, char secondArg)
 {
 

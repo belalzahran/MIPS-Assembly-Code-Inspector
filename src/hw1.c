@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 		}
 		else 
 		{
-			fprintf(stderr,"Invalid option\n");
+			fprintf(stderr,"Invalid\n");
 			fprintf(stderr, "%s\n",USAGE_MSG);
 		}
 	}
