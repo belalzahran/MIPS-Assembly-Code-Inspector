@@ -351,12 +351,12 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 	else if (option == 'l')
 	{
 		labelCount = optionL(inFile, erFile, false);
-		fprintf(stdout,"Total number of lables: %d\n",labelCount);
+		fprintf(stdout,"Total number of labels: %d\n",labelCount);
 	}
 	else if (option == 'c')
 	{
 		commentCount = optionC(inFile, erFile, false);
-		fprintf(stdout,"total number of comments: %d\n",commentCount);
+		fprintf(stdout,"Total number of comments: %d\n",commentCount);
 	}
 	else if (option == 't')
 	{
@@ -406,13 +406,13 @@ void process_fileVerbose(FILE *inFile, FILE *erFile, char option)
 	{
 		labelCount = optionL(inFile, erFile, true);
         //fprintf(stderr,);
-		fprintf(stdout,"Total number of lables: %d\n",labelCount);
+		fprintf(stdout,"Total number of labels: %d\n",labelCount);
 	}
 	else if (option == 'c')
 	{
 		commentCount = optionC(inFile, erFile, true);
         //fprintf(stderr,);
-		fprintf(stdout,"total number of comments: %d\n",commentCount);
+		fprintf(stdout,"Total number of comments: %d\n",commentCount);
 	}
 
 }

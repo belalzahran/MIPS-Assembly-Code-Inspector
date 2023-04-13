@@ -67,8 +67,7 @@ int main(int argc, char* argv[])
 		}
 		else 
 		{
-			fprintf(stderr,"Invalid\n");
-			fprintf(stderr, "%s\n",USAGE_MSG);
+			fprintf(stderr, "%s",USAGE_MSG);
 		}
 	}
 	else if(argc == 1)
