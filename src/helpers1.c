@@ -74,7 +74,7 @@ int optionE(FILE *file, FILE *erFile, bool v) {
         {
             line_count++;
         }
-        
+
         lineNum++;
     }
 
@@ -262,7 +262,6 @@ bool checkOptionCombination(char *argv[], int argc)
     return false;
 }
 
-
 int count_substring_occurrences(const char *str, const char *substr) 
 {
     int count = 0;
@@ -331,7 +330,6 @@ char* generate_asterisk_string(int length) {
     return asterisk_string;
 }
 
-
 void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 {
 
@@ -389,10 +387,6 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 	
 	}
 }
-
-
-
-
 
 void process_fileVerbose(FILE *inFile, FILE *erFile, char option)
 {
