@@ -139,7 +139,6 @@ bool dollarAndComma (char *currString, int stringLength)
     return result;
 }
 
-
 bool checkJ(char *input) {
     int space_count = 0;
 
@@ -157,7 +156,6 @@ bool checkJ(char *input) {
 
     return space_count == 1;
 }
-
 
 void optionT (char *filename, int *rCount, int *iCount, int *jCount)
 {
@@ -177,7 +175,7 @@ void optionT (char *filename, int *rCount, int *iCount, int *jCount)
         buffer[strcspn(buffer, "\n")] = '\0';
         currStrLength = strlen(buffer);
         dollarCount = dollarSignCount(buffer,currStrLength);
-        printf("\n\"%-s\"-",buffer);
+        //printf("\n\"%-s\"-",buffer);
 
         //printf("string length is %d\n",currStrLength);
         //print++
@@ -185,22 +183,22 @@ void optionT (char *filename, int *rCount, int *iCount, int *jCount)
 
         if (dollarCount == 3)
         {
-            printf("R COUNT ");
+            //printf("R COUNT ");
             (*rCount)++;
         }
         else if (dollarCount == 2 || dollarAndComma(buffer,currStrLength))
         {
-            printf("I COUNT ");
+            //printf("I COUNT ");
             (*iCount)++;
         }
         else if (dollarCount == 1 || checkJ(buffer))
         {
-            printf("J COUNT ");
+            //printf("J COUNT ");
             (*jCount)++;
         }
         else
         {
-            printf("else statement ");
+            //printf("else statement ");
         }
             
    }
