@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 			else if (secondArg == 's' || secondArg == 't')
 			{
 				// call regular process file and pass through r flag
-				printf("Calling regular function w second Arg R\n");
+				//printf("Calling regular function w second Arg R\n");
 				process_file(stdin, option, secondArg);
 			}
 			else 

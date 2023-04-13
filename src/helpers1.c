@@ -60,7 +60,6 @@ int optionE(FILE *file) {
         }
     }
 
-    fclose(file);
     return line_count;
 }
 
@@ -83,7 +82,6 @@ int optionC(FILE *file) {
         }
     }
 
-    fclose(file);
     return comment_count;
 }
 
@@ -188,9 +186,7 @@ void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
             
    }
     //printf("There are %d lines printed\n",print);
-    fclose(file);
 }
-
 
 bool string_exists(char *key, char **searchFrom, int count) {
     for (int i = 0; i < count; i++) {
@@ -242,6 +238,76 @@ bool checkOptionCombination(char *argv[], int argc)
     return false;
 }
 
+
+int count_substring_occurrences(const char *str, const char *substr) 
+{
+    int count = 0;
+    const char *temp = str;
+
+    while ((temp = strstr(temp, substr)) != NULL) {
+        count++;
+        temp += strlen(substr); // Move the pointer forward by the length of the substring
+    }
+
+    return count;
+}
+
+void optionR (FILE *file, char secondArg, void *sRegister[8][2], void *tRegister[10][2])
+{
+    
+    const int BUFFER_SIZE = 256;
+    char buffer[BUFFER_SIZE];
+    int count;
+
+    while (fgets(buffer, BUFFER_SIZE, file) != NULL) 
+    {
+        if (secondArg == 's') 
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                count = count_substring_occurrences(buffer,(char *) sRegister[i][0]);
+                //printf("%d\n",count);
+                if (count > 0)
+                {
+                    sRegister[i][1]+= count;
+                } 
+
+            }
+
+        }
+        else if (secondArg == 't')
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                count = count_substring_occurrences(buffer,(char *) tRegister[i][0]);
+                //printf("%d\n",count);
+                if (count > 0)
+                {
+                    tRegister[i][1]+= count;
+                } 
+
+            }
+        }
+        //printf("\nchecking new line\n");
+    }
+
+}
+
+char* generate_asterisk_string(int length) {
+    char* asterisk_string = (char*) malloc((length + 1) * sizeof(char));
+
+    if (asterisk_string != NULL) 
+    {
+        for (int i = 0; i < length; i++) {
+            asterisk_string[i] = '*';
+        }
+        asterisk_string[length] = '\0';
+    }
+
+    return asterisk_string;
+}
+
+
 void process_file(FILE *inFile, char option, char secondArg)
 {
 
@@ -252,14 +318,8 @@ void process_file(FILE *inFile, char option, char secondArg)
 	int iCount = 0;
 	int jCount = 0;
 
-    // char buffer[1024];
-
-    // printf("Processing with mode: %d\n", mode);
-
-    // while (fgets(buffer, sizeof(buffer), file) != NULL) {
-    //     printf("Processing line: %s", buffer);
-    //     // Do the actual processing here
-    // }   
+    void *sRegister[][2] = {{"$s0",0},{"$s1",0},{"$s2",0},{"$s3",0},{"$s4",0},{"$s5",0},{"$s6",0},{"$s7",0}};
+    void *tRegister[][2] = {{"$t0",0},{"$t1",0},{"$t2",0},{"$t3",0},{"$t4",0},{"$t5",0},{"$t6",0},{"$t7",0},{"$t8",0},{"$t9",0}};
 
     if(option == 'e')
 	{
@@ -283,7 +343,29 @@ void process_file(FILE *inFile, char option, char secondArg)
 		fprintf(stdout,"R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
 		
 	}
+    else if (option == 'r')
+	{
+		optionR(inFile,secondArg, sRegister, tRegister);
+
+        if(secondArg == 's')
+        {
+            for (int i = 0; i < 8; i ++)
+            {
+                fprintf(stdout,"%s: %s\n",(char *) sRegister[i][0],generate_asterisk_string((int)(intptr_t)sRegister[i][1]));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 10; i ++)
+            {
+                fprintf(stdout,"%s: %s\n",(char *) tRegister[i][0],generate_asterisk_string((int)(intptr_t)tRegister[i][1]));
+            }
+        }
+    
+	
+	}
 }
+
 
 
 

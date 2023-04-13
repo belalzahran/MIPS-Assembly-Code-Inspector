@@ -19,5 +19,9 @@ bool checkOptionCombination(char *argv[], int argc);
 bool string_exists(char *key, char **searchFrom, int count);
 char* combine_strings(const char* str1, const char* str2);
 
+void optionR (FILE *file, char secondArg, void *sRegister[8][2], void *tRegister[10][2]);
+char* generate_asterisk_string(int length);
+int count_substring_occurrences(const char *str, const char *substr);
+
 
 #endif
