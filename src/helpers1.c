@@ -59,21 +59,22 @@ int optionE(FILE *file, FILE *erFile, bool v) {
     {
         bool is_empty = true;
 
-        for (int i = 0; i < strlen(buffer); i++) {
+        for (int i = 0; i < strlen(buffer); i++) 
+        {
             if (buffer[i] != ' ' && buffer[i] != '\t' && buffer[i] != '\n') {
                 is_empty = false;
+                if (v)
+                {
+                    fprintf(stderr,"%d: %s",lineNum,&buffer[i]);
+                }
                 break;
             }
         }
         if (!is_empty) 
         {
-            if (v)
-            {
-                fprintf(stderr,"%d: %s",lineNum,buffer);
-            }
-
             line_count++;
         }
+        
         lineNum++;
     }
 
