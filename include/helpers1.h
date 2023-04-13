@@ -4,16 +4,16 @@
 #include <stdbool.h>
 
 
-int optionL(FILE *file);
-int optionE(FILE *file);
-int optionC(FILE *file);
+int optionL(FILE *file, bool v);
+int optionE(FILE *file, bool v);
+int optionC(FILE *file, bool v);
 void optionT(FILE *file, int *rCount, int *iCount, int *jCount);
 int dollarSignCount(char *currString, int stringLength);
 bool dollarAndComma (char *currString, int stringLength);
 bool checkJ(char *input);
 
-void process_file(FILE *file, char option, char secondArg);
-void process_fileVerbose(FILE *inFile, char option);
+void process_file(FILE *inFile, FILE *erFile, char option, char secondArg);
+void process_fileVerbose(FILE *inFile, FILE *erFile, char option);
 
 bool checkOptionCombination(char *argv[], int argc);
 bool string_exists(char *key, char **searchFrom, int count);

@@ -6,14 +6,16 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-int optionL(FILE *file) {
+int optionL(FILE *file, FILE *erFile, bool v) {
 
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
     int label_count = 0;
     bool in_text_section = true;
+    int lineNum = 1;
 
-    while (fgets(buffer, BUFFER_SIZE, file) != NULL) {
+    while (fgets(buffer, BUFFER_SIZE, file) != NULL) 
+    {
         
         if (strstr(buffer,".text") != NULL)
         {
@@ -27,26 +29,34 @@ int optionL(FILE *file) {
         if (in_text_section) 
         {
             int line_length = strlen(buffer);
-            for (int i = 0; i < line_length; i++) {
+            for (int i = 0; i < line_length; i++) 
+            {
                 if (buffer[i] == ':') {
                     label_count++;
+                    if (v)
+                    {
+                        fprintf(stderr,"%d: %s",lineNum,buffer);
+                    }
                     break;
                 }
             }
         }
+        lineNum++;
     }
 
     fclose(file);
     return label_count;
 }
 
-int optionE(FILE *file) {
+int optionE(FILE *file, FILE *erFile, bool v) {
 
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
     int line_count = 0;
+    int lineNum = 1;
 
-    while (fgets(buffer, BUFFER_SIZE, file) != NULL) {
+    while (fgets(buffer, BUFFER_SIZE, file) != NULL)
+    {
         bool is_empty = true;
 
         for (int i = 0; i < strlen(buffer); i++) {
@@ -55,36 +65,49 @@ int optionE(FILE *file) {
                 break;
             }
         }
-        if (!is_empty) {
+        if (!is_empty) 
+        {
+            if (v)
+            {
+                fprintf(stderr,"%d: %s",lineNum,buffer);
+            }
+
             line_count++;
         }
+        lineNum++;
     }
 
     return line_count;
 }
 
-int optionC(FILE *file) {
+int optionC(FILE *file, FILE *erFile, bool v) 
+{
 
-    int ch;
+    const int BUFFER_SIZE = 256;
+    char buffer[BUFFER_SIZE];
     int comment_count = 0;
-    bool in_comment = false;
+    int lineNum = 1;
 
-    while ((ch = fgetc(file)) != EOF) {
-        // Check for the start of a comment
-        if (ch == '#') {
-            in_comment = true;
+   while (fgets(buffer, BUFFER_SIZE, file) != NULL) 
+   {
+        int line_length = strlen(buffer);
+        for (int i = 0; i < line_length; i++) 
+        {
+            if (buffer[i] == '#')
+            {
+                comment_count++;
+                if (v)
+                {
+                    fprintf(stderr,"%d: %s",lineNum,&buffer[i]);
+                }
+                break;
+            }
         }
-
-        // Check for the end of a comment or the end of the input
-        if (in_comment && (ch == '\n' || ch == EOF)) {
-            comment_count++;
-            in_comment = false;
-        }
+        lineNum++;
     }
-
     return comment_count;
 }
-
+    
 int dollarSignCount(char *currString, int stringLength)
 {
     int count = 0;
@@ -308,7 +331,7 @@ char* generate_asterisk_string(int length) {
 }
 
 
-void process_file(FILE *inFile, char option, char secondArg)
+void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 {
 
     int labelCount = 0;
@@ -323,18 +346,18 @@ void process_file(FILE *inFile, char option, char secondArg)
 
     if(option == 'e')
 	{
-		lineCount = optionE(inFile);
+		lineCount = optionE(inFile, erFile, false);
 		fprintf(stdout,"Total number of lines: %d\n",lineCount);
 	}
 	else if (option == 'l')
 	{
-		labelCount = optionL(inFile);
-		fprintf(stdout,"Lables: %d\n",labelCount);
+		labelCount = optionL(inFile, erFile, false);
+		fprintf(stdout,"Total number of lables: %d\n",labelCount);
 	}
 	else if (option == 'c')
 	{
-		commentCount = optionC(inFile);
-		fprintf(stdout,"Comments: %d\n",commentCount);
+		commentCount = optionC(inFile, erFile, false);
+		fprintf(stdout,"total number of comments: %d\n",commentCount);
 	}
 	else if (option == 't')
 	{
@@ -370,45 +393,31 @@ void process_file(FILE *inFile, char option, char secondArg)
 
 
 
-void process_fileVerbose(FILE *inFile, char option)
+void process_fileVerbose(FILE *inFile, FILE *erFile, char option)
 {
 
     int labelCount = 0;
 	int lineCount = 0;
 	int commentCount = 0;
-	int rCount = 0;
-	int iCount = 0;
-	int jCount = 0;
 
-    // char buffer[1024];
-
-    // printf("Processing with mode: %d\n", mode);
-
-    // while (fgets(buffer, sizeof(buffer), file) != NULL) {
-    //     printf("Processing line: %s", buffer);
-    //     // Do the actual processing here
-    // }   
 
     if(option == 'e')
 	{
-		lineCount = optionE(inFile);
+		lineCount = optionE(inFile, erFile, true);
+        //fprintf(stderr,);
 		fprintf(stdout,"Total number of lines: %d\n",lineCount);
 	}
 	else if (option == 'l')
 	{
-		labelCount = optionL(inFile);
-		fprintf(stdout,"Lables: %d\n",labelCount);
+		labelCount = optionL(inFile, erFile, true);
+        //fprintf(stderr,);
+		fprintf(stdout,"Total number of lables: %d\n",labelCount);
 	}
 	else if (option == 'c')
 	{
-		commentCount = optionC(inFile);
-		fprintf(stdout,"Comments: %d\n",commentCount);
+		commentCount = optionC(inFile, erFile, true);
+        //fprintf(stderr,);
+		fprintf(stdout,"total number of comments: %d\n",commentCount);
 	}
-	else if (option == 't')
-	{
-		//printf("Running option T\n");
-		optionT(inFile,&rCount,&iCount,&jCount);
-		fprintf(stdout,"R:%d, I:%d, J:%d\n",rCount,iCount,jCount);
-		
-	}
+
 }
