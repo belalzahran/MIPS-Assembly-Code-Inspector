@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 int optionL(const char *filename) {
     FILE *file = fopen(filename, "r");
@@ -96,7 +97,6 @@ int optionC(char *filename) {
     return comment_count;
 }
 
-
 int dollarSignCount(char *currString, int stringLength)
 {
     int count = 0;
@@ -125,7 +125,7 @@ bool dollarAndComma (char *currString, int stringLength)
     {
         if (currString[i] == '$')
         {
-            for (int j = i; j < stringLength;i++)
+            for (int j = i; j < stringLength;j++)
             {
                 if(currString[j] == ',')
                 {
@@ -140,6 +140,24 @@ bool dollarAndComma (char *currString, int stringLength)
 }
 
 
+bool checkJ(char *input) {
+    int space_count = 0;
+
+    for (const char *ptr = input; *ptr != '\0'; ++ptr) {
+        if (*ptr == '#') {
+            break; // Stop checking when encountering a comment
+        }
+        if (isspace((unsigned char)*ptr)) {
+            space_count++;
+            if (space_count > 1) {
+                return false;
+            }
+        }
+    }
+
+    return space_count == 1;
+}
+
 
 void optionT (char *filename, int *rCount, int *iCount, int *jCount)
 {
@@ -148,37 +166,43 @@ void optionT (char *filename, int *rCount, int *iCount, int *jCount)
     {
         perror("Error opening file\n");
     }
-
     const int BUFFER_SIZE = 256;
     char buffer[BUFFER_SIZE];
+    int dollarCount;
+    int currStrLength;
 
     while (fgets(buffer, BUFFER_SIZE, file) != NULL) 
     {
-        int dollarCount = 0;
-        int currStrLength = strlen(buffer);
+        dollarCount = 0;
+        buffer[strcspn(buffer, "\n")] = '\0';
+        currStrLength = strlen(buffer);
+        dollarCount = dollarSignCount(buffer,currStrLength);
+        printf("\n\"%-s\"-",buffer);
+
         //printf("string length is %d\n",currStrLength);
         //print++
-            dollarCount = dollarSignCount(buffer,currStrLength);
-            //printf("\"%s\" contains %d $'s\n\n",buffer,dollarCount);
+        //printf("\"%s\" contains %d $'s\n\n",buffer,dollarCount);
 
-            if (dollarCount == 3)
-            {
-                printf("R COUNT\n");
-                (*rCount)++;
-                continue;
-            }
-            else if (dollarCount == 2 || dollarAndComma(buffer,currStrLength))
-            {
-                printf("I COUNT\n");
-                (*iCount)++;
-                continue;
-            }
-            else if (dollarCount == 1)
-            {
-                printf("J COUNT\n");
-                (*jCount)++;
-                continue;
-            }
+        if (dollarCount == 3)
+        {
+            printf("R COUNT ");
+            (*rCount)++;
+        }
+        else if (dollarCount == 2 || dollarAndComma(buffer,currStrLength))
+        {
+            printf("I COUNT ");
+            (*iCount)++;
+        }
+        else if (dollarCount == 1 || checkJ(buffer))
+        {
+            printf("J COUNT ");
+            (*jCount)++;
+        }
+        else
+        {
+            printf("else statement ");
+        }
+            
    }
     //printf("There are %d lines printed\n",print);
     fclose(file);

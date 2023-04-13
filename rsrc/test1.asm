@@ -5,4 +5,4 @@ functionF:
 
 done:   lb $s0, 0x0 ($s0)
 syscall
-jal functionF$
+jal functionF

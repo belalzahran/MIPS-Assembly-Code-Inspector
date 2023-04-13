@@ -10,6 +10,7 @@ int optionC(char *filename);
 void optionT(char *filename, int *rCount, int *iCount, int *jCount);
 int dollarSignCount(char *currString, int stringLength);
 bool dollarAndComma (char *currString, int stringLength);
+bool checkJ(char *input);
 
 
 
