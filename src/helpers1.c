@@ -149,7 +149,6 @@ bool dollarAndComma (char *currString, int stringLength)
 
 bool checkJ(char *input) 
 {
-
     if  (strstr(input, "j") != NULL || strstr(input, "jal") != NULL || strstr(input, "jr") != NULL || strstr(input, "b") != NULL)
     {
         return true;
@@ -318,8 +317,6 @@ char* generate_asterisk_string(int length) {
     return asterisk_string;
 }
 
-
-
 void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 {
 
@@ -413,11 +410,9 @@ void process_fileVerbose(FILE *inFile, FILE *erFile, char option)
 }
 
 bool is_file_empty(FILE *file) {
-
-
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
-    fclose(file);
+    rewind(file); // Rewind the file pointer back to the beginning
 
     return file_size == 0;
 }

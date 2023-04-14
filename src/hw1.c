@@ -16,8 +16,9 @@ int main(int argc, char* argv[])
 	char secondArg;
 	if (argc > 3) 
 	{
-		fprintf(stderr, "Too many options specified\n");
+		//fprintf(stderr, "Too many options specified\n");
 		fprintf(stderr, "%s\n",USAGE_MSG);
+		exit(1);
 	}
 	else if (argc == 3)
 	{	
@@ -28,17 +29,34 @@ int main(int argc, char* argv[])
 
 			if (secondArg == 'V')
 			{
-				process_fileVerbose(stdin, stderr, option);
+				if (!is_file_empty(stdin))
+				{
+					process_fileVerbose(stdin, stderr, option);
+				}
+				else
+				{
+					exit(2);
+				}
 			}
 			else if (secondArg == 's' || secondArg == 't')
 			{
-				process_file(stdin, stderr, option, secondArg);
+
+				if (!is_file_empty(stdin))
+				{
+					process_file(stdin, stderr, option, secondArg);
+				}
+				else
+				{
+					exit(2);
+				}
+					
 			}
 		}
 		else
 		{
-			fprintf(stderr,"Invalid combinations of options\n");
+			//fprintf(stderr,"Invalid combinations of options\n");
 			fprintf(stderr, "%s\n",USAGE_MSG);
+			exit(1);
 		}
 	}
 	else if (argc == 2)
@@ -46,17 +64,27 @@ int main(int argc, char* argv[])
 		if (checkOptionCombination(argv, argc))
 		{
 			option = argv[1][1];
-			process_file(stdin, stderr, option,' ');
+			if (!is_file_empty(stdin))
+			{
+				process_file(stdin, stderr, option,' ');
+			}
+			else
+			{
+				exit(2);
+			}
 		}
 		else 
 		{
 			fprintf(stderr, "%s",USAGE_MSG);
+			exit(1);
 		}
 	}
 	else if (argc == 1)
 	{
-		fprintf(stderr,"No options specified\n");
+		//fprintf(stderr,"No options specified\n");
 		fprintf(stderr, "%s\n",USAGE_MSG);
+		exit(1);
+
 	}
 
     return 0;
