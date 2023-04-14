@@ -147,41 +147,17 @@ bool dollarAndComma (char *currString, int stringLength)
     return result;
 }
 
-
-
-
-bool checkJ(char *input)
+bool checkJ(char *input) 
 {
-    char *j_instructions[] = {"j", "jal", "jr", "b"};
-    int num_instructions = sizeof(j_instructions) / sizeof(j_instructions[0]);
-
-    char *start = input;
-    while (isspace(*start))
-    {
-        start++;
-    }
-
-    for (int i = 0; i < num_instructions; i++)
-    {
-        char *found = strstr(start, j_instructions[i]);
-        if (found != NULL)
-        {
-    
-            int instruction_length = strlen(j_instructions[i]);
-            if (found[instruction_length] == ' ' || found[instruction_length] == '\0')
-            {
-                return true;
-            }
+    char *token = strtok(input, " ,\t");
+    while (token != NULL) {
+        if (strcmp(token, "j") == 0 || strcmp(token, "jal") == 0 || strcmp(token, "jr") == 0 || (token[0] == 'b' && token[1] == '\0')) {
+            return true;
         }
+        token = strtok(NULL, " ,\t");
     }
-
     return false;
 }
-
-
-
-
-
 
 void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
 {
