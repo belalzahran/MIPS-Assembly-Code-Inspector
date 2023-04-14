@@ -1,10 +1,6 @@
 // Define any helper functions here
+#include "helpers1.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include <ctype.h>
 
 int optionL(FILE *file, FILE *erFile, bool v) {
 
@@ -151,22 +147,14 @@ bool dollarAndComma (char *currString, int stringLength)
     return result;
 }
 
-bool checkJ(char *input) {
-    int space_count = 0;
+bool checkJ(char *input) 
+{
 
-    for (const char *ptr = input; *ptr != '\0'; ++ptr) {
-        if (*ptr == '#') {
-            break; // Stop checking when encountering a comment
-        }
-        if (isspace((unsigned char)*ptr)) {
-            space_count++;
-            if (space_count > 1) {
-                return false;
-            }
-        }
+    if  (strstr(input, "j") != NULL || strstr(input, "jal") != NULL || strstr(input, "jr") != NULL || strstr(input, "b") != NULL)
+    {
+        return true;
     }
-
-    return space_count == 1;
+    return false;
 }
 
 void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
@@ -275,7 +263,7 @@ int count_substring_occurrences(const char *str, const char *substr)
     return count;
 }
 
-void optionR (FILE *file, char secondArg, void *sRegister[8][2], void *tRegister[10][2])
+void optionR(FILE *file, char secondArg, RegisterEntry *sRegister, RegisterEntry *tRegister)
 {
     
     const int BUFFER_SIZE = 256;
@@ -288,11 +276,11 @@ void optionR (FILE *file, char secondArg, void *sRegister[8][2], void *tRegister
         {
             for (int i = 0; i < 8; i++)
             {
-                count = count_substring_occurrences(buffer,(char *) sRegister[i][0]);
+                count = count_substring_occurrences(buffer,(char *) sRegister[i].name);
                 //printf("%d\n",count);
                 if (count > 0)
                 {
-                    sRegister[i][1]+= count;
+                    sRegister[i].count+= count;
                 } 
 
             }
@@ -302,11 +290,11 @@ void optionR (FILE *file, char secondArg, void *sRegister[8][2], void *tRegister
         {
             for (int i = 0; i < 10; i++)
             {
-                count = count_substring_occurrences(buffer,(char *) tRegister[i][0]);
+                count = count_substring_occurrences(buffer,tRegister[i].name);
                 //printf("%d\n",count);
                 if (count > 0)
                 {
-                    tRegister[i][1]+= count;
+                    tRegister[i].count+= count;
                 } 
 
             }
@@ -330,6 +318,8 @@ char* generate_asterisk_string(int length) {
     return asterisk_string;
 }
 
+
+
 void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 {
 
@@ -340,8 +330,13 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
 	int iCount = 0;
 	int jCount = 0;
 
-    void *sRegister[][2] = {{"$s0",0},{"$s1",0},{"$s2",0},{"$s3",0},{"$s4",0},{"$s5",0},{"$s6",0},{"$s7",0}};
-    void *tRegister[][2] = {{"$t0",0},{"$t1",0},{"$t2",0},{"$t3",0},{"$t4",0},{"$t5",0},{"$t6",0},{"$t7",0},{"$t8",0},{"$t9",0}};
+    RegisterEntry sRegister[] = 
+    { {"$s0", 0},{"$s1", 0},{"$s2", 0},{"$s3", 0},{"$s4", 0},{"$s5", 0},{"$s6", 0},{"$s7", 0} };
+
+    RegisterEntry tRegister[] = 
+    { {"$t0", 0},{"$t1", 0},{"$t2", 0},{"$t3", 0},{"$t4", 0},{"$t5", 0},{"$t6", 0},{"$t7", 0},{"$t8", 0},{"$t9", 0}};
+
+
 
     if(option == 'e')
 	{
@@ -373,14 +368,14 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
         {
             for (int i = 0; i < 8; i ++)
             {
-                fprintf(stdout,"%s: %s\n",(char *) sRegister[i][0],generate_asterisk_string(sRegister[i][1]));
+                fprintf(stdout,"%s: %s\n",sRegister[i].name,generate_asterisk_string(sRegister[i].count));
             }
         }
         else
         {
             for (int i = 0; i < 10; i ++)
             {
-                fprintf(stdout,"%s: %s\n",(char *) tRegister[i][0],generate_asterisk_string(tRegister[i][1]));
+                fprintf(stdout,"%s: %s\n",tRegister[i].name,generate_asterisk_string(tRegister[i].count));
             }
         }
     
@@ -415,4 +410,14 @@ void process_fileVerbose(FILE *inFile, FILE *erFile, char option)
 		fprintf(stdout,"Total number of comments: %d\n",commentCount);
 	}
 
+}
+
+bool is_file_empty(FILE *file) {
+
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fclose(file);
+
+    return file_size == 0;
 }
