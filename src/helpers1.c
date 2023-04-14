@@ -147,14 +147,41 @@ bool dollarAndComma (char *currString, int stringLength)
     return result;
 }
 
-bool checkJ(char *input) 
+
+
+
+bool checkJ(char *input)
 {
-    if  (strstr(input, "j") != NULL || strstr(input, "jal") != NULL || strstr(input, "jr") != NULL || strstr(input, "b") != NULL)
+    char *j_instructions[] = {"j", "jal", "jr", "b"};
+    int num_instructions = sizeof(j_instructions) / sizeof(j_instructions[0]);
+
+    char *start = input;
+    while (isspace(*start))
     {
-        return true;
+        start++;
     }
+
+    for (int i = 0; i < num_instructions; i++)
+    {
+        char *found = strstr(start, j_instructions[i]);
+        if (found != NULL)
+        {
+    
+            int instruction_length = strlen(j_instructions[i]);
+            if (found[instruction_length] == ' ' || found[instruction_length] == '\0')
+            {
+                return true;
+            }
+        }
+    }
+
     return false;
 }
+
+
+
+
+
 
 void optionT (FILE *file, int *rCount, int *iCount, int *jCount)
 {
@@ -365,14 +392,18 @@ void process_file(FILE *inFile, FILE *erFile, char option, char secondArg)
         {
             for (int i = 0; i < 8; i ++)
             {
-                fprintf(stdout,"%s: %s\n",sRegister[i].name,generate_asterisk_string(sRegister[i].count));
+                char *asterisks = generate_asterisk_string(sRegister[i].count);
+                fprintf(stdout,"%s: %s\n", sRegister[i].name, asterisks);
+                free(asterisks); // Free the memory
             }
         }
         else
         {
             for (int i = 0; i < 10; i ++)
             {
-                fprintf(stdout,"%s: %s\n",tRegister[i].name,generate_asterisk_string(tRegister[i].count));
+                char *asterisks = generate_asterisk_string(tRegister[i].count);
+                fprintf(stdout,"%s: %s\n", tRegister[i].name, asterisks);
+                free(asterisks); // Free the memory
             }
         }
     
